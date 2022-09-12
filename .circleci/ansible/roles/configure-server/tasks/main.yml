@@ -15,7 +15,7 @@
   apt:
     autoremove: yes
 
-name: "install dependencies."
+- name: "install dependencies."
   become: true
   apt:
     name: ["unzip", "curl", "git"]
