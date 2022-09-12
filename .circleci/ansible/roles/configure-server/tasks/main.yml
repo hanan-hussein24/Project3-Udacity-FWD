@@ -22,30 +22,14 @@
     state: latest
     update_cache: yes
 
-- name: Install nvm
-  become: true
-  shell: |
-    curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | sudo -E bash 
-  args:
-    executable: /bin/bash
-    chdir: "$HOME"
-    creates: "$HOME/.nvm/nvm.sh"
-
-- name: Setup .profile
-  ansible.builtin.lineinfile:
-    path: ~/.profile
-    line: source ~/.nvm/nvm.sh # This will make sure Node is on the user's PATH
-    create: yes
-
-- name: Install node
+- name: "Install nodejs 13.8.0"
   become: true
   shell: |  
-    nvm install 13.8.0
-    nvm alias default 13.8.0                               
-  args:
-    executable: /bin/bash
-    hdir: "$HOME"
-    creates: "$HOME/.nvm/versions/node/v{{item}}"
+    curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+    sudo apt-get install -y nodejs
+  # Use n version manager to use Node.js v13.8.0
+    sudo npm install -g n
+    sudo n 13.8.0
 
 - name: "install pm2"
   become: true
