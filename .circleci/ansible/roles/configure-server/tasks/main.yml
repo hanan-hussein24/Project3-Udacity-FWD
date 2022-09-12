@@ -22,17 +22,19 @@
     state: latest
     update_cache: yes
 
-- name: "Add Node.js & NPM"
+- name: Install nvm
   become: true
-  shell:
-    curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
+  shell: |
+    curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | sudo -E bash 
 
-- name: "install Node.js 13"
+- name: Install node
   become: true
-  apt:
-    name: ["nodejs"]
-    state: latest
-    update_cache: yes
+  shell: |
+      source ~/.nvm/nvm.sh 
+      nvm install 13.8.0
+      nvm alias default 13.8.0                               
+# args:
+#     executable: /bin/bash
 
 - name: "install pm2"
   become: true
