@@ -15,10 +15,22 @@
   apt:
     autoremove: yes
 
-- name: "install dependencies."
+name: "install dependencies."
   become: true
   apt:
-    name: ["nodejs", "npm"]
+    name: ["unzip", "curl", "git"]
+    state: latest
+    update_cache: yes
+
+- name: "Add Node.js & NPM"
+  become: true
+  shell:
+    curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
+
+- name: "install Node.js 13"
+  become: true
+  apt:
+    name: ["nodejs"]
     state: latest
     update_cache: yes
 
