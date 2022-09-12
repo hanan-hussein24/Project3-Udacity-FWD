@@ -29,8 +29,9 @@
 
 - name: Install node
   become: true
+  become_user: root
   shell: |
-      source ~/.nvm/nvm.sh 
+      source /root/.nvm/nvm.sh 
       nvm install 13.8.0
       nvm alias default 13.8.0                               
   args:
