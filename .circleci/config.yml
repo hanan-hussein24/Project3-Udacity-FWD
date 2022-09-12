@@ -140,7 +140,7 @@ jobs:
             yum install -y openssh-clients
 
       - run:
-          name: Ensure back-end infrastructure exists
+          name: Ensure back-end infrastructure exist
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/backend.yml \
