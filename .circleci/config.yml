@@ -166,6 +166,7 @@ jobs:
               --region us-east-1 --output text)
             echo "[backend]" >> .circleci/ansible/inventory.txt  
             echo "$BACKEND_PUBLIC_IP" >> .circleci/ansible/inventory.txt
+            cat .circleci/ansible/inventory.txt
               
       - persist_to_workspace:
           root: ~/
