@@ -192,7 +192,6 @@ jobs:
   configure-infrastructure:
     docker:
       - image: python:3.7-alpine
-        user: root 
         environment:
            ANSIBLE_HOST_KEY_CHECKING: "no"
     steps:
@@ -201,7 +200,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk add --update  tar gzip ansible curl openssh-client
+            apk add --update  tar gzip nodejs npm ansible curl openssh-client
             pip install awscli 
 
       - add_ssh_keys:
@@ -209,7 +208,6 @@ jobs:
       - attach_workspace:
           at: ~/
 
-      - install_nodejs
       - run:
           name: Configure server
           command: |
@@ -223,7 +221,6 @@ jobs:
   run-migrations:
     docker:
       - image: python:3.7-alpine
-        user: root
     steps:  
       - checkout
 
@@ -232,10 +229,9 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk add --update tar  gzip curl zip
+            apk add --update tar  gzip cnodejs npm url zip
             pip install awscli 
 
-      - install_nodejs
       - run:
           name: Run migrations
           command: |
