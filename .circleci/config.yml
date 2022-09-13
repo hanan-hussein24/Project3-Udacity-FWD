@@ -200,7 +200,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk add -y sudo
+            apk add  sudo
             apk add --update  tar gzip ansible curl openssh-client
             pip install awscli 
 
