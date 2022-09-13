@@ -221,17 +221,17 @@ jobs:
 
   run-migrations:
     docker:
-      - image: python:3.7-alpine
+      - image: hanan24/node-aws-ansible
     steps:  
       - checkout
 
       - restore_cache:
           keys: [backend-build]
-      - run:
-          name: Install dependencies
-          command: |
-            apk add --update tar gzip nodejs npm curl zip
-            pip install awscli 
+      # - run:
+      #     name: Install dependencies
+      #     command: |
+      #       apk add --update tar gzip nodejs npm curl zip
+      #       pip install awscli 
 
       - run:
           name: Run migrations
