@@ -200,7 +200,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk add --update  tar gzip ansible curl nodejs npm openssh-client
+            apk add --update  tar gzip ansible curl openssh-client
             pip install awscli 
 
       - add_ssh_keys:
@@ -208,7 +208,7 @@ jobs:
       - attach_workspace:
           at: ~/
 
-          
+
       - run:
           name: Configure server
           command: |
@@ -230,7 +230,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk add --update tar nodejs npm gzip curl zip
+            apk add --update tar  gzip curl zip
             pip install awscli 
 
       - run:
