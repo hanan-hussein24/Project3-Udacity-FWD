@@ -61,11 +61,11 @@ jobs:
           name: Front-end build
           command: |
             cd frontend
-            npm install
-            npm run build
+            npm run build:prod
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
+# npm install
 
   build-backend:
     docker:
@@ -238,7 +238,7 @@ jobs:
           command: |
             cd backend
             npm install
-            npm audit fix --force
+            npm run premigrations
             npm run migrations > migrations_dump.txt
             cat migrations_dump.txt
       - run:
