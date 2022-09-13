@@ -222,6 +222,9 @@ jobs:
   run-migrations:
     docker:
       - image: hanan24/node-aws-ansible
+        auth:
+          username: hanan24
+          password: $DOCKERHUB_ACCESS_TOKEN
     steps:  
       - checkout
 
