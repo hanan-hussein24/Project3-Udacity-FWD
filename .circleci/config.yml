@@ -192,21 +192,22 @@ jobs:
   configure-infrastructure:
     docker:
       - image: python:3.7-alpine
-    # environment:
-    #   ANSIBLE_HOST_KEY_CHECKING: "no"
+        environment:
+           ANSIBLE_HOST_KEY_CHECKING: "no"
     steps:
       - checkout
-      - install_nodejs
+   
       - run:
           name: Install dependencies
           command: |
-            apk add --update tar gzip ansible openssh-client
+            apk add --update  sudo tar gzip ansible curl openssh-client
             pip install awscli 
 
       - add_ssh_keys:
           fingerprints: ["c8:92:15:8e:d0:ac:7d:f0:f4:12:87:00:cb:e5:70:21"]
       - attach_workspace:
           at: ~/
+      - install_nodejs
 
       - run:
           name: Configure server
