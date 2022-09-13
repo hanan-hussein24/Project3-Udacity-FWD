@@ -200,16 +200,15 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk add  sudo
-            apk add --update  tar gzip ansible curl openssh-client
+            apk add --update  tar gzip ansible curl nodejs npm openssh-client
             pip install awscli 
 
       - add_ssh_keys:
           fingerprints: ["c8:92:15:8e:d0:ac:7d:f0:f4:12:87:00:cb:e5:70:21"]
       - attach_workspace:
           at: ~/
-      - install_nodejs
 
+          
       - run:
           name: Configure server
           command: |
@@ -225,14 +224,15 @@ jobs:
       - image: python:3.7-alpine
     steps:  
       - checkout
-      - install_nodejs
+
       - restore_cache:
           keys: [backend-deps]
       - run:
           name: Install dependencies
           command: |
-            apk add --update tar gzip curl zip
+            apk add --update tar nodejs npm gzip curl zip
             pip install awscli 
+
       - run:
           name: Run migrations
           command: |
