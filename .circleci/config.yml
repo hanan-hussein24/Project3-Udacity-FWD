@@ -271,8 +271,8 @@ jobs:
       - checkout
       - setup_remote_docker:
           docker_layer_caching: true
-      # - restore_cache:
-      #     keys: [frontend-build]
+      - restore_cache:
+          keys: [frontend-build]
 
       - run:
           name: Get backend url
@@ -284,7 +284,6 @@ jobs:
             cd frontend  
             echo "API_URL=http://${BACKEND_PUBLIC_IP}:3030" >> .env
             cat .env
-            npm install
             npm run build;prod
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       # - run:
