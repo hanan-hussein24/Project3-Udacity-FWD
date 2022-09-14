@@ -221,21 +221,22 @@ jobs:
 
   run-migrations:
     docker:
-      - image: hanan24/node-aws-ansible
-        auth:
-          username: hanan24
-          password: $DOCKERHUB_ACCESS_TOKEN
+      - image: python:3.7-alpine
+        # auth:
+        #   username: hanan24
+        #   password: $DOCKERHUB_ACCESS_TOKEN
     steps:  
       - checkout
-
+      # - setup_remote_docker:
+      #     docker_layer_caching: true
       - restore_cache:
           keys: [backend-build]
       
-      # - run:
-      #     name: Install dependencies
-      #     command: |
-      #       apk add --update tar gzip nodejs npm curl zip
-      #       pip install awscli 
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --update tar gzip nodejs npm curl zip
+            pip install awscli
 
       - run:
           name: Run migrations
@@ -243,8 +244,7 @@ jobs:
             cd backend
             npm install
             npm run premigrations
-            npm run migrations > migrations_dump.txt
-            cat migrations_dump.txt
+            npm run migrations
       - run:
           name: Send migration results to memstash
           command: |
