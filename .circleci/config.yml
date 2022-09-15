@@ -298,6 +298,9 @@ jobs:
         auth:
           username: hanan24
           password: $DOCKERHUB_ACCESS_TOKEN
+        environment:
+          ANSIBLE_HOST_KEY_CHECKING: "no"
+  
     steps:
       - checkout
       - setup_remote_docker:
@@ -329,9 +332,6 @@ jobs:
       - run:
           name: Deploy backend
           command: |
-            export TYPEORM_MIGRATIONS_DIR=./migrations
-            export TYPEORM_ENTITIES=./modules/domain/*/.entity{.ts,.js}
-            export TYPEORM_MIGRATIONS=./migrations/*.ts
             cd .circleci/ansible
             cat inventory.txt
             ansible-playbook -vvvv -i inventory.txt deploy-backend.yml
@@ -340,6 +340,10 @@ jobs:
           circleworkflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
       - revert-migrations:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+
+  # export TYPEORM_MIGRATIONS_DIR=./migrations
+  # export TYPEORM_ENTITIES=./modules/domain/*/.entity{.ts,.js}
+  # export TYPEORM_MIGRATIONS=./migrations/*.ts
 
 #   smoke-test:
 #     docker:
