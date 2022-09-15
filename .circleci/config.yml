@@ -311,6 +311,12 @@ jobs:
           at: ~/
 
       - run:
+          name: Install dependencies
+          command: |
+            cd backend
+            npm install
+            
+      - run:
           name: Package backend
           command: |
             cd backend

@@ -1,24 +1,40 @@
 ## Back-end deploy playbook goes here.
 ---
-- name: Create Backend Directory
+
+- name: "update apt packages."
+  become: yes
+  apt:
+    update_cache: yes
+
+- name: "upgrade packages."
+  become: true
+  apt:
+    upgrade: yes
+
+- name: remove dependencies that are no longer required
+  become: yes
+  apt:
+    autoremove: yes
+
+- name: "Create Backend Directory"
   file:
-    path: /home/ubuntu/backend-app
+    path: ~/backend-app
     state: directory
 
 - name: "Copy compiled backend app"
   copy:
     src: ~/project/.circleci/ansible/roles/deploy/artifact.tar.gz
-    dest: /home/ubuntu/backend-app
+    dest: ~/backend-app
 
-- name: Unarchive backend file to EC2
+- name: "Unarchive backend file to EC2"
   unarchive:
     src: artifact.tar.gz
-    dest: /home/ubuntu/backend-app
+    dest: ~/backend-app
 
 - name: "Installing Node Dependencies"
   shell: |
-    cd /home/ubuntu/backend-app
-    npm i
+    cd ~/backend-app
+    npm install
 # - name: Start the app
 #   shell: |
 #     export TYPEORM_ENTITIES=./backend/dist/modules/domain/**/*.entity{.ts,.js}
@@ -32,13 +48,12 @@
 
 - name: "Executing Node app with PM2"
   shell: |
-    cd /home/ubuntu/backend-app/dist
+    cd ~/backend-app/dist
     pm2 stop default
     pm2 start main.js
-
   register: execute_node
 
-- name: print message
+- name: "print message"
   debug:
     msg: "{{ execute_node.stdout_lines }}"    
 
