@@ -5,10 +5,10 @@
     path: ~/backend-app
     state: directory
 
-# - name: "Copy compiled backend app"
-# - copy:
-#     src: ~/project/.circleci/ansible/roles/deploy/artifact.tar.gz
-#     dest: ~/backend-app
+- name: "Copy compiled backend app"
+  copy:
+    src: ~/project/.circleci/ansible/roles/deploy/artifact.tar.gz
+    dest: ~/backend-app
 
 - name: "Unarchive backend file to EC2"
   unarchive:
