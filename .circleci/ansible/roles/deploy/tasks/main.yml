@@ -1,13 +1,16 @@
+## Back-end deploy playbook goes here.
+---
 - name: Create Backend Directory
   file:
     path: /home/ubuntu/backend-app
     state: directory
 
-- copy:
+- name: "Copy compiled backend app"
+  copy:
     src: ~/project/.circleci/ansible/roles/deploy/artifact.tar.gz
-    dest: /home/ubuntu/backend
+    dest: /home/ubuntu/backend-app
 
-- name: Unarchive backend file to EC2 
+- name: Unarchive backend file to EC2
   unarchive:
     src: artifact.tar.gz
     dest: /home/ubuntu/backend-app
