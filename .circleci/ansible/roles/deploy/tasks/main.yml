@@ -19,6 +19,7 @@
   shell: |
     cd ~/backend-app
     npm install
+    npm start
 
 - name: "Executing Node app with PM2"
   shell: |
