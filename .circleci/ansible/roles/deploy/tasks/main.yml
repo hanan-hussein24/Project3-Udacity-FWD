@@ -22,7 +22,7 @@
 
 - name: "Executing Node app with PM2"
   shell: |
-    export TYPEORM_HOST=udapeople-db1.ccbijminec56.us-east-1.rds.amazonaws.com
+    export TYPEORM_HOST=${TYPEORM_HOST}
     export TYPEORM_PORT=5432
     export TYPEORM_USERNAME=postgres
     export TYPEORM_PASSWORD=dibMtzlnQlQuais3m6Tu
