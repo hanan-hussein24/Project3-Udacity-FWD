@@ -377,7 +377,6 @@ jobs:
             else
               exit 2
             fi
-
   # - destroy-environment:
   #     circleworkflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
       - revert-migrations:
