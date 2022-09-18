@@ -35,13 +35,13 @@
     pm2 stop default
     sudo pkill -9 node
     nohup node /home/ubuntu/backend-app/dist/main.js
-  # register: execute_node
+  register: execute_node
 
 # pm2 stop default
 
-# - name: "print message"
-#   debug:
-#     msg: "{{ execute_node.stdout_lines }}"
+- name: "print message"
+  debug:
+    msg: "{{ execute_node.stdout_lines }}"
 
 # - name: "Configure pm2 to start as service"
 #   shell: |
