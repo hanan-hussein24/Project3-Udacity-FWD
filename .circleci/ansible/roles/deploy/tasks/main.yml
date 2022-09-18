@@ -20,9 +20,24 @@
     cd ~/backend-app
     npm install
 
+# - name: "Executing Node app with PM2"
+#   shell: |
+#     pm2 stop default
+#     sudo pkill -9 node
+#     cd /home/ubuntu/
+#     export TYPEORM_HOST=udapeople-db1.ccbijminec56.us-east-1.rds.amazonaws.com
+#     export TYPEORM_PORT=5432
+#     export TYPEORM_USERNAME=postgres
+#     export TYPEORM_PASSWORD=dibMtzlnQlQuais3m6Tu
+#     export TYPEORM_DATABASE=glee
+#     export TYPEORM_MIGRATIONS_DIR=./backend-app/dist/migrations
+#     export TYPEORM_ENTITIES=./backend-app/dist/modules/domain/**/*.entity{.ts,.js}
+#     export TYPEORM_MIGRATIONS=./backend-app/dist/migrations/*.ts
+#     nohup node /home/ubuntu/backend-app/dist/main.js 2> /dev/null &
+#   register: execute_node
+
 - name: "Executing Node app with PM2"
   shell: |
-    pm2 stop default
     sudo pkill -9 node
     cd /home/ubuntu/
     export TYPEORM_HOST=udapeople-db1.ccbijminec56.us-east-1.rds.amazonaws.com
@@ -33,25 +48,8 @@
     export TYPEORM_MIGRATIONS_DIR=./backend-app/dist/migrations
     export TYPEORM_ENTITIES=./backend-app/dist/modules/domain/**/*.entity{.ts,.js}
     export TYPEORM_MIGRATIONS=./backend-app/dist/migrations/*.ts
-    nohup node /home/ubuntu/backend-app/dist/main.js 2> /dev/null &
-  register: execute_node
-  
-# - name: "Executing Node app with PM2"
-#   shell: |
-#     cd /home/ubuntu/
-#     export TYPEORM_HOST=udapeople-db1.ccbijminec56.us-east-1.rds.amazonaws.com
-#     export TYPEORM_PORT=5432
-#     export TYPEORM_USERNAME=postgres
-#     export TYPEORM_PASSWORD=dibMtzlnQlQuais3m6Tu
-#     export TYPEORM_DATABASE=glee
-#     export TYPEORM_MIGRATIONS_DIR=./backend-app/dist/migrations
-#     export TYPEORM_ENTITIES=./backend-app/dist/modules/domain/**/*.entity{.ts,.js}
-#     export TYPEORM_MIGRATIONS=./backend-app/dist/migrations/*.ts
-#     pm2 stop default
-#     sudo pkill -9 node
-#     nohup node /home/ubuntu/backend-app/dist/main.js 2>&1 &
-#   register: execute_node
-
+    nohup node /home/ubuntu/backend-app/dist/main.js > logs.txt &
+    
 # pm2 stop default
 
 # - name: "print message"
