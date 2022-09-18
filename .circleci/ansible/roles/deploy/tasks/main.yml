@@ -31,10 +31,10 @@
     export TYPEORM_MIGRATIONS_DIR=./backend-app/dist/migrations
     export TYPEORM_ENTITIES=./backend-app/dist/modules/domain/**/*.entity{.ts,.js}
     export TYPEORM_MIGRATIONS=./backend-app/dist/migrations/*.ts
-   shell: "(pm2 stop; cd ~/; nohup node /home/ubuntu/backend-app/dist/main.js 2>&1 &)"
-   async: 10
-   poll: 0
-   register: execute_node
+  shell: "(pm2 stop; cd ~/; nohup node /home/ubuntu/backend-app/dist/main.js 2>&1 &)"
+  async: 10
+  poll: 0
+  register: execute_node
 
 # - name: "Executing Node app with PM2"
 #   shell: |
