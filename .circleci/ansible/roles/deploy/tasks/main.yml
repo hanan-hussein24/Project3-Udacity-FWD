@@ -35,6 +35,8 @@
 - shell: "(pm2 stop; cd ~/; nohup node /home/ubuntu/backend-app/dist/main.js 2>&1 &)"
   async: 10
   poll: 0
+  register: execute_node
+
 # - name: "Executing Node app with PM2"
 #   shell: |
 #     cd /home/ubuntu/
