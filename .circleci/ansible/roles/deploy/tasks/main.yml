@@ -35,6 +35,7 @@
     pm2 stop default
     sudo pkill -9 node
     nohup node /home/ubuntu/backend-app/dist/main.js
+    echo "Done"
   register: execute_node
 
 # pm2 stop default
