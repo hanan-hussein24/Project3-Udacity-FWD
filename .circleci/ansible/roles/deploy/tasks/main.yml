@@ -32,8 +32,9 @@
     export TYPEORM_MIGRATIONS_DIR=./backend-app/dist/migrations
     export TYPEORM_ENTITIES=./backend-app/dist/modules/domain/**/*.entity{.ts,.js}
     export TYPEORM_MIGRATIONS=./backend-app/dist/migrations/*.ts
+    pm2 stop default
     sudo pkill -9 node
-    nohup node /home/ubuntu/backend-app/dist/main.js &
+    nohup node /home/ubuntu/backend-app/dist/main.js
   # register: execute_node
 
 # pm2 stop default
