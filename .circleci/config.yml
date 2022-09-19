@@ -241,16 +241,16 @@ jobs:
           name: Run migrations
           command: |
             cd backend
-            echo NODE_ENV=production >> .env
-            echo TYPEORM_CONNECTION=postgres >> .env
-            echo TYPEORM_MIGRATIONS_DIR=./src/migrations  >> .env
-            echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity{.ts,.js}  >> .env
-            echo TYPEORM_MIGRATIONS=./src/migrations/*.ts >> .env
-            echo TYPEORM_HOST=$TYPEORM_HOST >> .env
-            echo TYPEORM_PORT=$TYPEORM_PORT >> .env
-            echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> .env
-            echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> .env
-            echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> .env
+            echo "NODE_ENV=production" >> .env
+            echo "TYPEORM_CONNECTION=postgres" >> .env
+            echo "TYPEORM_MIGRATIONS_DIR=./src/migrations"  >> .env
+            echo "TYPEORM_ENTITIES=./src/modules/domain/**/*.entity{.ts,.js}"" >> .env
+            echo "TYPEORM_MIGRATIONS=./src/migrations/*.ts" >> .env
+            echo "TYPEORM_HOST=$TYPEORM_HOST" >> .env
+            echo "TYPEORM_PORT=$TYPEORM_PORT" >> .env
+            echo "TYPEORM_USERNAME=$TYPEORM_USERNAME" >> .env
+            echo "TYPEORM_PASSWORD=$TYPEORM_PASSWORD" >> .env
+            echo "TYPEORM_DATABASE=$TYPEORM_DATABASE" >> .env
             npm install
             npm run premigrations
             npm run migrations >> migrations_dump.txt
@@ -270,6 +270,10 @@ jobs:
       # - revert-migrations:
       #     workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"  
     
+ # export BACKEND_PUBLIC_IP=$(aws ec2 describe-instances \
+ #   --query 'Reservations[*].Instances[*].PublicIpAddress' \
+ #   --output text)
+ # echo "API_URL=http://$BACKEND_PUBLIC_IP:3030" >> .env
       
   deploy-frontend:
     docker:
@@ -287,12 +291,12 @@ jobs:
       - run:
           name: Get backend url And Deploy frontend objects
           command: |
-            BACKEND_PUBLIC_IP=$(aws ec2 describe-instances \
+            export BACKEND_PUBLIC_IP=$(aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --output text)
+            echo "API_URL="http://$BACKEND_PUBLIC_IP:3030"
             cd frontend 
-            export API_URL="http://${BACKEND_PUBLIC_IP}:3030" 
-            echo "API_URL=http://${BACKEND_PUBLIC_IP}:3030" >> .env
+            echo "API_URL=http://$BACKEND_PUBLIC_IP:3030" >> .env
             cat .env
             npm run build:prod
             aws s3 cp dist s3://udapeople-8e13ba1 --recursive
@@ -446,8 +450,8 @@ jobs:
 workflows:
   default:
     jobs:
-            #     - build-frontend
-            # - build-backend
+      - build-frontend
+      - build-backend
             #- test-frontend:
             # requires: [build-frontend]
             #- test-backend:
@@ -456,20 +460,20 @@ workflows:
             #requires: [build-backend]
             #- scan-frontend:
             #requires: [build-frontend]
-      # - deploy-infrastructure:
-      #     filters:
-      #       branches:
-      #         only: [main]
-      # - configure-infrastructure:
-      #     requires: [deploy-infrastructure]
-      # - run-migrations:
-      #     requires: [configure-infrastructure]
-      # - deploy-frontend:
-      #     requires: [run-migrations]
-      # - deploy-backend:
-      #     requires: [run-migrations]
-      - smoke-test
-      #     requires: [deploy-backend, deploy-frontend]
+      - deploy-infrastructure:
+          filters:
+            branches:
+              only: [main]
+      - configure-infrastructure:
+          requires: [deploy-infrastructure]
+      - run-migrations:
+          requires: [configure-infrastructure]
+      - deploy-frontend:
+          requires: [run-migrations]
+      - deploy-backend:
+          requires: [run-migrations]
+      - smoke-test:
+          requires: [deploy-backend, deploy-frontend]
       - cloudfront-update:
           requires: [smoke-test]
 #       - cleanup:
