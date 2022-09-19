@@ -187,7 +187,6 @@ jobs:
 
       # - destroy-environment:
       #     circleworkflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
-
 #-filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
 
   configure-infrastructure:
