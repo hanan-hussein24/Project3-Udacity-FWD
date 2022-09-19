@@ -152,29 +152,28 @@ jobs:
             yum install -y openssh 
             yum install -y openssh-clients
 
-            #  - run:
-            #name: Ensure back-end infrastructure exist
-            #command: |
-            #aws cloudformation deploy \
-            # --template-file .circleci/files/backend.yml \
-            # --tags project=udapeople-${CIRCLE_WORKFLOW_ID:0:7} \
-            # --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-            # --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
+          # - run:
+          #   name: Ensure back-end infrastructure exist
+          #   command: |
+          #   aws cloudformation deploy \
+          #    --template-file .circleci/files/backend.yml \
+          #    --tags project=udapeople-${CIRCLE_WORKFLOW_ID:0:7} \
+          #    --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+          #    --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
               
-      - run:
-          name: Ensure front-end infrastructure exist
-          command: |
-            aws cloudformation deploy \
-              --template-file .circleci/files/frontend.yml \
-              --tags project=udapeople-${CIRCLE_WORKFLOW_ID:0:7} \
-              --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
+      # - run:
+      #     name: Ensure front-end infrastructure exist
+      #     command: |
+      #       aws cloudformation deploy \
+      #         --template-file .circleci/files/frontend.yml \
+      #         --tags project=udapeople-${CIRCLE_WORKFLOW_ID:0:7} \
+      #         --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
+      #         --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
               
       - run:
           name: Add back-end ip to ansible inventory
           command: |
             BACKEND_PUBLIC_IP=$(aws ec2 describe-instances \
-              --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --region us-east-1 --output text)
 
@@ -186,8 +185,9 @@ jobs:
           paths:
             - project/.circleci/ansible/inventory.txt
 
-      - destroy-environment:
-          circleworkflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+      # - destroy-environment:
+      #     circleworkflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+#-filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
 
   configure-infrastructure:
     docker:
@@ -215,8 +215,8 @@ jobs:
             cat inventory.txt
             ansible-playbook -vvvv -i inventory.txt configure-server.yml
 
-      - destroy-environment:
-          circleworkflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+      # - destroy-environment:
+      #     circleworkflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
 
   run-migrations:
     docker:
@@ -241,10 +241,21 @@ jobs:
           name: Run migrations
           command: |
             cd backend
+            echo NODE_ENV=production >> .env
+            echo TYPEORM_CONNECTION=postgres >> .env
+            echo TYPEORM_MIGRATIONS_DIR=./src/migrations  >> .env
+            echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity{.ts,.js}  >> .env
+            echo TYPEORM_MIGRATIONS=./src/migrations/*.ts >> .env
+            echo TYPEORM_HOST=$TYPEORM_HOST >> .env
+            echo TYPEORM_PORT=$TYPEORM_PORT >> .env
+            echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> .env
+            echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> .env
+            echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> .env
             npm install
             npm run premigrations
             npm run migrations >> migrations_dump.txt
             cat migrations_dump.txt
+            cat .env
       - run:
           name: Send migration results to kvdb
           command: |
@@ -254,10 +265,10 @@ jobs:
             else
               echo "No migrations are pending" 
             fi
-      - destroy-environment:
-          circleworkflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
-      - revert-migrations:
-          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"  
+      # - destroy-environment:
+      #     circleworkflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+      # - revert-migrations:
+      #     workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"  
     
       
   deploy-frontend:
@@ -277,7 +288,6 @@ jobs:
           name: Get backend url And Deploy frontend objects
           command: |
             BACKEND_PUBLIC_IP=$(aws ec2 describe-instances \
-              --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --output text)
             cd frontend 
@@ -289,8 +299,8 @@ jobs:
 
             # - destroy-environment:
             #circleworkflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
-      - revert-migrations:
-          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"  
+      # - revert-migrations:
+      #     workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"  
 
   deploy-backend:
     docker:
@@ -336,8 +346,8 @@ jobs:
 
       # - destroy-environment:
       #     circleworkflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
-      - revert-migrations:
-          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+      # - revert-migrations:
+      #     workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
 
   smoke-test:
     docker:
@@ -446,23 +456,23 @@ workflows:
             #requires: [build-backend]
             #- scan-frontend:
             #requires: [build-frontend]
-      # - deploy-infrastructure
+      - deploy-infrastructure:
             #requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-            #filters:
-            #branches:
-            # only: [main]
-            #- configure-infrastructure:
-            #requires: [deploy-infrastructure]
-            #- run-migrations:
-            #requires: [configure-infrastructure]
-      # - deploy-frontend:
-      #       requires: [deploy-infrastructure]
-            #- deploy-backend:
-            #requires: [run-migrations]
+          filters:
+            branches:
+            only: [main]
+      - configure-infrastructure:
+          requires: [deploy-infrastructure]
+      - run-migrations:
+          requires: [configure-infrastructure]
+      - deploy-frontend:
+          requires: [deploy-infrastructure]
+      - deploy-backend:
+            requires: [run-migrations]
       - smoke-test
           # requires: [deploy-frontend]    
               #requires: [deploy-backend, deploy-frontend]
       - cloudfront-update:
-          requires: [smoke-test]
+          requires: [run-migrations, smoke-test]
 #       - cleanup:
 #           requires: [cloudfront-update]
