@@ -459,7 +459,7 @@ workflows:
       - deploy-infrastructure:
           filters:
             branches:
-            only: [main]
+              only: [main]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
       - run-migrations:
