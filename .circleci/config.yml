@@ -420,7 +420,7 @@ jobs:
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/cloudfront.yml \
-              --parameter-overrides WorkFlowID="${CIRCLE_WORKFLOW_ID:0:7}" \
+              --parameter-overrides ID=8e13ba1 \
               --stack-name udapeople-cloudfront
   # - destroy-environment:
   #     circleworkflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
