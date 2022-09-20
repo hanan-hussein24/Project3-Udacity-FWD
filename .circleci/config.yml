@@ -254,7 +254,6 @@ jobs:
             npm install
             npm run premigrations
             npm run migrations >> migrations_dump.txt
-            cat migrations_dump.txt
             cat .env
       - run:
           name: Send migration results to kvdb
@@ -269,7 +268,7 @@ jobs:
       #     circleworkflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
       # - revert-migrations:
       #     workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"  
-    
+  # cat migrations_dump.txt 
  # export BACKEND_PUBLIC_IP=$(aws ec2 describe-instances \
  #   --query 'Reservations[*].Instances[*].PublicIpAddress' \
  #   --output text)
