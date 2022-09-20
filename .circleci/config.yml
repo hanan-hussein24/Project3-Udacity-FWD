@@ -440,6 +440,7 @@ jobs:
       - run:
           name: Get old stack workflow id & Remove old stacks and files
           command: |
+            aws s3 rm "s3://udapeople-8e13ba1" --recursive
             aws cloudformation delete-stack --stack-name udapeople-frontend-8e13ba1
 
   # export STACKS=($(aws cloudformation list-stacks \
