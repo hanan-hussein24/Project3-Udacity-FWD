@@ -1,0 +1,21 @@
+
+
+CPU Usage:
+
+avg(rate(node_cpu_seconds_total{mode!="idle"}[1m]))by(instance)*100
+
+
+Available Memory:
+
+node_memory_Cached_bytes+node_memory_Buffers_bytes+node_memory_MemFree_bytes
+
+
+Available Disk Space(root volume)
+
+node_filesystem_free_bytes{device="/dev/root"}
+
+
+
+udapeople-alertmanager  ---> mail 
+pass:
+tzimvndgjzjaslgl
